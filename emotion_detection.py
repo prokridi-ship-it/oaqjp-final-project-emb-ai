@@ -1,4 +1,5 @@
 """Detect emotion using the Watson NLP service."""
+import json
 import requests
 
 def emotion_detector(text_to_analyze):
@@ -15,5 +16,27 @@ def emotion_detector(text_to_analyze):
     # Make a POST request to the API with the payload and headers
     response = requests.post(url, json=payload, headers=headers)
 
-    # Return the response text
-    return response.text
+    # Convert the response text into a dictionary.
+    response_dict = json.loads(response.text)
+
+    # Extract the emotion scores.
+    emotions = response_dict["emotionPredictions"][0]["emotion"]
+
+    anger = emotions["anger"]
+    disgust = emotions["disgust"]
+    fear = emotions["fear"]
+    joy = emotions["joy"]
+    sadness = emotions["sadness"]
+
+    # Find the emotion with the highest score.
+    dominant_emotion = max(emotions, key=emotions.get)
+
+    # Return the emotion scores along with the dominant emotion
+    return {
+        "anger": anger,
+        "disgust": disgust,
+        "fear": fear,
+        "joy": joy,
+        "sadness": sadness,
+        "dominant_emotion": dominant_emotion
+    }
