@@ -16,27 +16,44 @@ def emotion_detector(text_to_analyze):
     # Make a POST request to the API with the payload and headers
     response = requests.post(url, json=payload, headers=headers)
 
-    # Convert the response text into a dictionary.
-    response_dict = json.loads(response.text)
+    # If the response status code is 400, set all emotions to None
+    if response.status_code == 400:
+        return {
+            "anger": None,
+            "disgust": None,
+            "fear": None,
+            "joy": None,
+            "sadness": None,
+            "dominant_emotion": None
+        }
 
-    # Extract the emotion scores.
-    emotions = response_dict["emotionPredictions"][0]["emotion"]
+    # If the response status code is 200, sett all emotions to None
+    if response.status_code == 200:
+        # Convert the response text into a dictionary.
+        response_data = json.loads(response.text)
 
-    anger = emotions["anger"]
-    disgust = emotions["disgust"]
-    fear = emotions["fear"]
-    joy = emotions["joy"]
-    sadness = emotions["sadness"]
+        # Extract the emotion scores.
+        emotions = response_data["emotionPredictions"][0]["emotion"]
 
-    # Find the emotion with the highest score.
-    dominant_emotion = max(emotions, key=emotions.get)
+        # Return the emotion scores along with the dominant emotion
+        return {
+            "anger": emotions["anger"],
+            "disgust": emotions["disgust"],
+            "fear": emotions["fear"],
+            "joy": emotions["joy"],
+            "sadness": emotions["sadness"],
+            "dominant_emotion": max(
+                emotions,
+                key=emotions.get
+            )
+        }
 
-    # Return the emotion scores along with the dominant emotion
+    # Handle any unexpected status code.
     return {
-        "anger": anger,
-        "disgust": disgust,
-        "fear": fear,
-        "joy": joy,
-        "sadness": sadness,
-        "dominant_emotion": dominant_emotion
+        "anger": None,
+        "disgust": None,
+        "fear": None,
+        "joy": None,
+        "sadness": None,
+        "dominant_emotion": None
     }

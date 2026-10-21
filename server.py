@@ -19,14 +19,14 @@ def emot_detector():
 
     # Handle blank or missing input.
     if not text_to_analyze or not text_to_analyze.strip():
-        return "Please enter some text before submitting."
+        return "Invalid text! Please try again!"
 
     # Pass the text to the emotion_detector function and store the response
     response = emotion_detector(text_to_analyze)
 
     # Handle an invalid request returned by the emotion detector.
     if response["dominant_emotion"] is None:
-        return "Invalid input! Please enter a valid statement."
+        return "Invalid text! Please try again!"
 
     # Display the response 
     return (
