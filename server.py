@@ -28,7 +28,7 @@ def emot_detector():
     if response["dominant_emotion"] is None:
         return "Invalid text! Please try again!"
 
-    # Display the response 
+    # Display the response
     return (
         f"For the given statement, the system response is "
         f"'anger': {response['anger']}, "
@@ -47,3 +47,4 @@ def render_index_page():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+    
